@@ -1,5 +1,4 @@
 try {
-
   const fs = require('fs');
   const path = require('path');
 
@@ -29,9 +28,8 @@ try {
 
     const headerMatches = fileData.match(new RegExp(`^(${classDivider}\\n.*?\\n${classDivider})`, 'm'));
 
-    if (headerMatches != null && headerMatches[1].includes(fileName)) {
-      fs.writeFileSync(path.join(jsPath, "_" + fileName), headerMatches[1]);
-    }
+    if (headerMatches == null)
+      throw new Error("Header not found in " + fileName);
 
     if (fileName === 'rmmz_core.js') {
       return; // tiene una estructura diferente, se omite por el momento
@@ -42,7 +40,7 @@ try {
       return lines.length > 0 && lines[0].trim().startsWith('// ');
     });
 
-    const splitClasses = splitSections.map((splitClass) => sectionDivider + splitClass.trimEnd() + "\n");
+    const splitClasses = splitSections.map((splitClass) => sectionDivider + splitClass.trimEnd() + '\n');
 
     const splitClassesNames = [];
 
@@ -50,8 +48,8 @@ try {
       const constructorMatch = splitClass.match(/function\s+([A-Za-z0-9_]+)\s*\(/);
 
       if (constructorMatch != null) {
-        console.log(constructorMatch[1]);
-        fs.writeFileSync(path.join(directoryPath, constructorMatch[1] + '.js'), splitClass);
+        const content = headerMatches[1] + '\n\n' + splitClass;
+        fs.writeFileSync(path.join(directoryPath, constructorMatch[1] + '.js'), content);
         splitClassesNames.push(constructorMatch[1]);
       }
     });
@@ -65,14 +63,13 @@ try {
 
   for (const fileName in scriptsByFileName) {
     const scriptUrl = `    "js/${fileName}.js",`;
-    console.log('scriptUrl:', scriptUrl);
+
     if (mainData.includes(scriptUrl)) {
       const scriptUrlsByFileName = scriptsByFileName[fileName].map((className) => `    "js/${fileName}/${className}.js"`);
-      mainData = mainData.replace(scriptUrl, scriptUrlsByFileName.join(',\n'));
+      mainData = mainData.replace(scriptUrl, scriptUrlsByFileName.join(',\n') + ',\n');
     }
   }
-  console.log('mainData:', mainData);
-  // fs.writeFileSync(mainPath, mainData);
+  fs.writeFileSync(mainPath, mainData);
 } catch (error) {
   console.error("An error occurred while splitting the code");
   console.error(error.stack ?? error.message);
