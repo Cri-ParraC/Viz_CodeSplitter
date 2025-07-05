@@ -31,18 +31,21 @@ try {
     if (headerMatches == null)
       throw new Error("Header not found in " + fileName);
 
+    const splitClassesNames = [];
+
     if (fileName === 'rmmz_core.js') {
-      return; // tiene una estructura diferente, se omite por el momento
+      const jsExtensions = fileData.split(sectionDivider)[1].trimEnd() + '\n';
+      const content = headerMatches[1] + '\n' + sectionDivider + jsExtensions;
+      fs.writeFileSync(path.join(directoryPath, 'JsExtensions' + '.js'), content);
+      splitClassesNames.push('JsExtensions');
     }
 
     const splitSections = fileData.split(sectionDivider).filter((splitClass) => {
-      const lines = splitClass.trim().split('\n');
-      return lines.length > 0 && lines[0].trim().startsWith('// ');
+      const firstLine = splitClass.trim().split('\n')[0].trim();
+      return firstLine.startsWith('// ') || firstLine.startsWith('/**');
     });
 
     const splitClasses = splitSections.map((splitClass) => sectionDivider + splitClass.trimEnd() + '\n');
-
-    const splitClassesNames = [];
 
     splitClasses.forEach((splitClass) => {
       const constructorMatch = splitClass.match(/function\s+([A-Za-z0-9_]+)\s*\(/);
@@ -55,7 +58,6 @@ try {
     });
 
     scriptsByFileName[fileBaseName] = splitClassesNames;
-
   });
 
   const mainPath = path.join(jsPath, 'main.js');
@@ -65,7 +67,8 @@ try {
     const scriptUrl = `    "js/${fileName}.js",`;
 
     if (mainData.includes(scriptUrl)) {
-      const scriptUrlsByFileName = scriptsByFileName[fileName].map((className) => `    "js/${fileName}/${className}.js"`);
+      const scriptUrlsByFileName = scriptsByFileName[fileName].map((className) =>
+        `    "js/${fileName}/${className}.js"`);
       mainData = mainData.replace(scriptUrl, scriptUrlsByFileName.join(',\n') + ',\n');
     }
   }
