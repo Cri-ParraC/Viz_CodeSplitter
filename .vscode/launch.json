@@ -4,7 +4,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Viz_CodeSplitter - Node",
+      "name": "Viz_CodeSplitter.js - Node",
       "skipFiles": [
         "<node_internals>/**"
       ],
