@@ -1,0 +1,24 @@
+{
+  "name": "viz_codesplitter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Viz_CodeSplitter.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "babel Viz_CodeSplitter.js --out-file ../Viz_CodeSplitter.js --watch --source-maps",
+    "build": "babel Viz_CodeSplitter.js --out-file ../Viz_CodeSplitter.js --source-maps"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cri-ParraC/Viz_CodeSplitter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.28.0",
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "core-js": "^3.43.0"
+  }
+}
