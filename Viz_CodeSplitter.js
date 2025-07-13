@@ -17,8 +17,8 @@
 
   console.info("Viz_CodeSplitter.js [MZ] (v1.0.1)");
 
-  window.Imported ??= {};
-  Imported.Viz_CodeSplitter = 1.0;
+  globalThis.Imported ??= {};
+  globalThis.Imported.Viz_CodeSplitter = 1.0;
 
   try {
     const fs = require('fs');
@@ -36,6 +36,9 @@
     const rmmzFileNames = jsPathFileNames.filter((fileName) => {
       return fileName.startsWith('rmmz_') && fileName.endsWith('.js');
     });
+
+    if (rmmzFileNames.length === 0)
+      throw new Error('No RMMZ files found to process');
 
     const scriptsByFileName = {};
 
