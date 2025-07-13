@@ -9,8 +9,21 @@
         "<node_internals>/**"
       ],
       "program": "${workspaceFolder}/Viz_CodeSplitter.js",
-      "console": "externalTerminal",
-      "internalConsoleOptions": "neverOpen",
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Viz_CodeSplitter.js - fnm",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/Viz_CodeSplitter.js",
+      "runtimeExecutable": "fnm",
+      "runtimeArgs": [
+        "exec",
+        "--",
+        "node"
+      ]
     }
   ]
 }
