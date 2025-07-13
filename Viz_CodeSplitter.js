@@ -56,6 +56,10 @@
       if (headerMatches == null)
         throw new Error("Header not found in " + fileName);
 
+      if (headerMatches[1].includes(fileName)) {
+        fs.writeFileSync(path.join(jsPath, fileName), headerMatches[1]);
+      }
+
       const splitClassesNames = [];
 
       if (fileName === 'rmmz_core.js') {
